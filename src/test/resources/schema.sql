@@ -3,5 +3,5 @@ CREATE TABLE employee (
   firstname VARCHAR(250) NOT NULL,
   lastname VARCHAR(250) NOT NULL,
   email VARCHAR(250) NOT NULL,
-  address VARCHAR(250) NOT NULL
+  address VARCHAR(600) NOT NULL
 );
