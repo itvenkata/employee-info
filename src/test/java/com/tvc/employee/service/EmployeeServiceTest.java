@@ -2,6 +2,7 @@ package com.tvc.employee.service;
 
 import com.tvc.employee.entity.Employee;
 import com.tvc.employee.exception.EmployeeAlreadyExistsException;
+import com.tvc.employee.exception.EmployeeNotFoundException;
 import com.tvc.employee.mapper.EmployeeMapper;
 import com.tvc.employee.repository.EmployeeRepository;
 import com.tvc.employee.vo.EmployeeVO;
@@ -74,13 +75,67 @@ class EmployeeServiceTest {
   }
 
   @Test
-  void getEmployee() {}
+  void getEmployeeFound() {
+
+    EmployeeVO employeeVO = new EmployeeVO();
+    employeeVO.setId(101);
+    employeeVO.setFirstname("James");
+    employeeVO.setLastname("Kulla");
+    employeeVO.setEmail("james@gmail.com");
+    employeeVO.setAddress("400 W Rand");
+
+    Optional<Employee> emp = Optional.of(mapper.toEmployee(employeeVO));
+    when(employeeRepository.findById(12345)).thenReturn(emp);
+    employeeServiceImpl.getEmployee(12345);
+    assertNotNull(employeeVO);
+    assertEquals("James", employeeVO.getFirstname());
+  }
+
+  @Test
+  void getEmployeeNotFound() {
+
+    Optional<Employee> emp = Optional.empty();
+    when(employeeRepository.findById(12345)).thenReturn(emp);
+    assertThrows(
+        EmployeeNotFoundException.class,
+        () -> {
+          employeeServiceImpl.getEmployee(12345);
+        });
+  }
 
   @Test
   void deleteEmployee() {}
 
   @Test
-  void updateEmployee() {}
+  void updateEmployeeSuccess() {
+
+    EmployeeVO employeeVO = new EmployeeVO();
+    employeeVO.setId(1234);
+    employeeVO.setFirstname("James");
+    employeeVO.setLastname("Kulla");
+    employeeVO.setEmail("james@gmail.com");
+    employeeVO.setAddress("400 W Rand");
+    Optional<Employee> emp = Optional.of(mapper.toEmployee(employeeVO));
+    when(employeeRepository.findById(1234)).thenReturn(emp);
+    employeeServiceImpl.updateEmployee(1234, employeeVO);
+  }
+
+  @Test
+  void updateEmployeeFailed() {
+
+    EmployeeVO employeeVO = new EmployeeVO();
+    employeeVO.setId(1234);
+    employeeVO.setFirstname("James");
+    employeeVO.setLastname("Kulla");
+    employeeVO.setEmail("james@gmail.com");
+    employeeVO.setAddress("400 W Rand");
+    Optional<Employee> emp = Optional.empty();
+    assertThrows(
+        EmployeeNotFoundException.class,
+        () -> {
+          employeeServiceImpl.updateEmployee(1234, employeeVO);
+        });
+  }
 
   @Test
   void getAllEmployees() {}
