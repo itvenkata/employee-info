@@ -2,11 +2,14 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'jacoco'
+
 }
 
 group = 'com.tvc.employee'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+
 
 repositories {
     mavenCentral()
@@ -28,6 +31,17 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
+
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport
 
 test {
     useJUnitPlatform()
