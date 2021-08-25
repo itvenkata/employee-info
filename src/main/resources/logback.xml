@@ -5,7 +5,7 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d [%thread] %-5level  %logger{35} - %msg%n</pattern>
+            <pattern>%d [%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -32,7 +32,7 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <root level="error">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
 
