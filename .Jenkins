@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+
+
+    stages {
+        stage ("Checkout") {
+                steps {
+                    git(credentialsId: 'GITHUB_SCMADM_SSH_KEY', poll: false, changelog: false, url: 'git@github.com:itvenkata/employee-info.git', branch: 'main')
+                }
+            }
+		stage ("build") {
+        	steps {
+            	sh './gradlew clean build'
+            }
+        }
+    }
+}
