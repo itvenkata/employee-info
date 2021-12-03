@@ -2,6 +2,7 @@ config:
   name: employee-info
   artifactID: employee-info
   groupID: com/tvc/employee
+  artifactRepository: local-dev
 
 
 
