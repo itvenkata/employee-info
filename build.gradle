@@ -22,7 +22,7 @@ plugins {
 }
 
 group = 'com.tvc.employee'
-version = getVersion()
+version = 1.0//getVersion()
 
 def getVersion() {
     println("Build Number .....${buildNumber}")
@@ -73,44 +73,44 @@ test {
 
 // task for generation sources.jar
 task sourcesJar(type: Jar, dependsOn: classes) {
-	version = getVersion()
-	classifier = 'sources'
-	from sourceSets.main.allSource
+    version = getVersion()
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 bootJar {
-	version = getVersion()
-	enabled = true
+    version = getVersion()
+    enabled = true
 }
 
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// publish generated jar file
-			from components.java
-			// publish source code as well
-			artifact (sourcesJar) {
-				classifier = 'sources'
-			}
-			artifact bootJar
-		}
-	}
+    publications {
+        mavenJava(MavenPublication) {
+            // publish generated jar file
+            from components.java
+            // publish source code as well
+            artifact(sourcesJar) {
+                classifier = 'sources'
+            }
+            artifact bootJar
+        }
+    }
 }
 //repository to publish into
 artifactory {
-	// the base Artifactory URL if not overridden by the publisher/resolver
-	contextUrl = "${artifactory_url}"
-	publish {
-		repository {
-			// define if snapshot or release repository should be used for the deploy
-			def repositoryKey = version.endsWith("SNAPSHOT") ? "my-libs-snapshot-local" : "my-libs-release-local"
-			println "Publishing ${project.name} version ${version} into ${repositoryKey}"
+    // the base Artifactory URL if not overridden by the publisher/resolver
+    contextUrl = "${artifactory_url}"
+    publish {
+        repository {
+            // define if snapshot or release repository should be used for the deploy
+            def repositoryKey = version.endsWith("SNAPSHOT") ? "my-libs-snapshot-local" : "my-libs-release-local"
+            println "Publishing ${project.name} version ${version} into ${repositoryKey}"
 
-			repoKey = repositoryKey
-			username = "${artifactory_user}"
-			password = "${artifactory_password}"
-			maven = true
-		}
-		defaults { publications ('mavenJava') }
-	}
+            repoKey = repositoryKey
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+        }
+        defaults { publications('mavenJava') }
+    }
 }
