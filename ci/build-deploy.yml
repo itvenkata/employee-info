@@ -1,0 +1,9 @@
+stages:
+  - Build
+  - Publish
+  - Deploy
+  - CleanUp
+config:
+  name: employee-info
+  artifactID: employee-info
+  groupID: com/tvc/employee
