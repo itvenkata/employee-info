@@ -10,8 +10,8 @@ artifactory {
     contextUrl = "${artifactory_url}"
     publish {
         repository {
-           // repoKey = version.endsWith('SNAPSHOT') || version.endsWith('S') ? 'gradle-dev-local': 'gradle-release-local'
-            repoKey='local-dev'
+            // repoKey = version.endsWith('SNAPSHOT') || version.endsWith('S') ? 'gradle-dev-local': 'gradle-release-local'
+            repoKey = 'local-dev'
             username = "${artifactory_user}"
             password = "${artifactory_password}"
             maven = true

@@ -1,18 +1,17 @@
 package com.tvc.employee.service;
 
-import com.tvc.employee.vo.EmployeeVO;
-
+import com.tvc.employee.vo.EmployeeVo;
 import java.util.List;
 
 public interface EmployeeService {
 
-    public EmployeeVO createEmployee(EmployeeVO empVO);
+  public EmployeeVo createEmployee(EmployeeVo empVO);
 
-    public EmployeeVO getEmployee(Integer empId);
+  public EmployeeVo getEmployee(Integer empId);
 
-    public void deleteEmployee(Integer empId);
+  public void deleteEmployee(Integer empId);
 
-    public EmployeeVO updateEmployee(Integer empId , EmployeeVO updateEmpVO);
+  public EmployeeVo updateEmployee(Integer empId, EmployeeVo updateEmpVO);
 
-    public List<EmployeeVO> getAllEmployees();
+  public List<EmployeeVo> getAllEmployees();
 }

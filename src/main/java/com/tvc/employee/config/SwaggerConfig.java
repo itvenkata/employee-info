@@ -1,5 +1,7 @@
 package com.tvc.employee.config;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -11,9 +13,6 @@ import springfox.documentation.swagger.web.OperationsSorter;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.time.LocalDate;
-import java.util.Collections;
 
 @EnableSwagger2
 @Configuration

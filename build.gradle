@@ -13,21 +13,27 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'idea'
     id 'jacoco'
     id 'java-library'
     id 'maven-publish'
     id 'com.jfrog.artifactory' version '4.17.2'
     id "org.sonarqube" version "3.1.1"
-
+    id 'checkstyle'
+    id "org.owasp.dependencycheck" version "6.5.1"
 }
 
+apply plugin: 'java'
+
+
 group = 'com.tvc.employee'
-version = 1.0//getVersion()
+version = 1.0
 
 def getVersion() {
     println("Build Number .....${buildNumber}")
     return "${buildNumber}"
 }
+
 
 sourceCompatibility = '1.8'
 
@@ -35,6 +41,19 @@ sourceCompatibility = '1.8'
 repositories {
     mavenCentral()
 }
+
+
+configurations {
+    acceptanceTestImplementation.extendsFrom implementation, compileOnly, annotationProcessor, testImplementation
+    acceptanceTestRuntimeOnly.extendsFrom runTimeOnly
+}
+
+ext {
+    cucumberVersion = "7.0.0"
+    wiremockVersion = "2.27.2"
+    jacocoVersion = "0.8.5"
+}
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -49,41 +68,178 @@ dependencies {
     //implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    testImplementation "com.github.tomakehurst:wiremock:${wiremockVersion}"
+    // implementation "com.github.tomakehurst:wiremock-jre8:2.27.0"
 
-    runtimeOnly 'com.h2database:h2'
+    implementation 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // https://mvnrepository.com/artifact/com.atlassian.ta/wiremock-pact-generator
+    implementation group: 'com.atlassian.ta', name: 'wiremock-pact-generator', version: '2.4.3'
+
+
+    implementation 'net.masterthought:cucumber-reporting:4.2.3'
+    implementation 'io.rest-assured:rest-assured'
+
+
+    acceptanceTestImplementation 'org.projectlombok:lombok'
+    acceptanceTestImplementation 'org.projectlombok:lombok'
+    acceptanceTestImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+    acceptanceTestImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    acceptanceTestImplementation "io.cucumber:cucumber-spring:${cucumberVersion}"
+    acceptanceTestImplementation "org.springframework.boot:spring-boot-starter-test"
+    acceptanceTestImplementation "org.springframework.boot:spring-boot-starter-web"
+    //implementation 'org.apache.httpcomponents:httpclient:${httpclient.version}'
 
 }
 
 
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.enabled true
-        // html.enabled true
-        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+sourceSets {
+    acceptanceTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('acceptance-test/java')
+        }
+        resources.srcDir file('acceptance-test/resources')
     }
 }
 
-check.dependsOn jacocoTestReport
+
+/*sourceSets {
+    acceptanceTest {
+        java {
+            srcDir 'acceptance-test/java'
+        }
+        resources {
+            srcDir 'acceptance-test/resources'
+        }
+        compileClasspath += sourceSets.main.runtimeClasspath
+    }
+}*/
+//Checkstyle for code style and quality
+checkstyle {
+    toolVersion '7.8.1'
+}
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled true
+        html.stylesheet resources.text.fromFile('config/xls/checksyle-style.xsl')
+    }
+}
+
+// Jacoco for Code Coverage
+jacoco {
+    toolVersion = "${jacocoVersion}"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+// Runs Jacoco tasks when build task is executed
+build {
+    finalizedBy jacocoTestReport
+    finalizedBy jacocoTestCoverageVerification
+}
+// Setting custom parameters when executing jacocoTestReport task
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/reports/jacocoHtml")
+    }
+}
+
+// Setting custom parameters when executing jacocoTestCoverageVerification task for setting rules
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.2
+            }
+        }
+
+        rule {
+            enabled = false
+            element = 'CLASS'
+            includes = ['org.gradle.*']
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 1.0
+            }
+        }
+    }
+}
 
 test {
     useJUnitPlatform()
 }
 
+
+/*task acceptanceTest(type: Test) {
+    description = "Runs acceptanceTest Tests"
+    testClassesDir = sourceSets.acceptanceTest.output.classesDir
+    classpath += sourceSets.acceptanceTest.runtimeClasspath
+}*/
+
+task acceptanceTest(type: Test) {
+    description("Acceptance Tests")
+    group = 'verification'
+    testClassesDirs = sourceSets.acceptanceTest.output.classesDirs
+    classpath = sourceSets.acceptanceTest.runtimeClasspath
+    mustRunAfter(test)
+    useJUnitPlatform {
+        includeTags('acceptance-test')
+    }
+}
+
+task intTest(type: Test) {
+    description = "Run integration tests (located in src/intTest/...)."
+    testClassesDirs = project.sourceSets.acceptanceTest.output.classesDirs
+    classpath = project.sourceSets.acceptanceTest.runtimeClasspath
+}
 // task for generation sources.jar
-task sourcesJar(type: Jar, dependsOn: classes) {
+/*task sourcesJar(type: Jar, dependsOn: classes) {
     version = getVersion()
     classifier = 'sources'
     from sourceSets.main.allSource
-}
+}*/
 
 bootJar {
     version = getVersion()
     enabled = true
 }
 
-publishing {
+dependencyCheck {
+    // the default artifact types that will be analyzed.
+    analyzedTypes = ['jar']
+    // CI-tools usually needs XML-reports, but humans needs HTML.
+    formats = ['HTML', 'JUNIT']
+    // Specifies if the build should be failed if a CVSS score equal to or above a specified level is identified.
+    failBuildOnCVSS = 8
+    // Output directory where the report should be generated
+    outputDirectory = "build/reports/dependency-vulnerabilities"
+    // specify a list of known issues which contain false-positives to be suppressed
+    suppressionFiles = ["$projectDir/config/dependencycheck/dependency-check-suppression.xml"]
+    // Sets the number of hours to wait before checking for new updates from the NVD, defaults to 4.
+    cveValidForHours = 24
+}
+
+/*check.dependsOn acceptanceTest
+acceptanceTest.mustRunAfter test*/
+
+
+/*
+task acceptanceTest(type: Test) {
+    testClassesDirs = sourceSets.acceptanceTests.output.classesDirs
+    classpath = sourceSets.acceptanceTests.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+*/
+
+/*publishing {
     publications {
         mavenJava(MavenPublication) {
             // publish generated jar file
@@ -103,7 +259,7 @@ artifactory {
     publish {
         repository {
             // define if snapshot or release repository should be used for the deploy
-            def repositoryKey = version.endsWith("SNAPSHOT") ? "my-libs-snapshot-local" : "my-libs-release-local"
+           // def repositoryKey = version.endsWith("SNAPSHOT") ? "my-libs-snapshot-local" : "my-libs-release-local"
             println "Publishing ${project.name} version ${version} into ${repositoryKey}"
 
             repoKey = repositoryKey
@@ -113,4 +269,4 @@ artifactory {
         }
         defaults { publications('mavenJava') }
     }
-}
+}*/
