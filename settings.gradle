@@ -1,4 +1,4 @@
 rootProject.name = 'employee-info'
-include 'acceptanceTest'
+include 'acceptance-test'
 
 
