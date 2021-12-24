@@ -23,7 +23,6 @@ bin/
 *.iml
 *.ipr
 *.bin
-*.xml
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
