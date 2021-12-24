@@ -209,6 +209,10 @@ task intTest(type: Test) {
     from sourceSets.main.allSource
 }*/
 
+jar {
+    enabled = false
+}
+
 bootJar {
     version = getVersion()
     enabled = true
