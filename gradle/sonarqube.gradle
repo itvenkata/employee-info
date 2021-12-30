@@ -11,6 +11,8 @@ sonarqube {
         property "sonar.sourceEncoding", "UTF-8"
         property "sonar.projectVersion", "${project.version}"
         property "sonar.host.url", "http://localhost:9000"
+        property "sonar.login", "admin"
+        property "sonar.password", "Druvi123"
         property "sonar.exclusions", ["**/generated/**/*"]
         property "sonar.coverage.exclusions", ["**/*Application.java", "**/config/**"]
         property "sonar.coverage.jacoco.xmlReportsPaths", "${project.buildDir}/reports/jacoco/report.xml"

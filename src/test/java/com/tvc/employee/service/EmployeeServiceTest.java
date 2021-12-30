@@ -1,21 +1,22 @@
 package com.tvc.employee.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.tvc.employee.entity.Employee;
 import com.tvc.employee.exception.EmployeeAlreadyExistsException;
 import com.tvc.employee.exception.EmployeeNotFoundException;
 import com.tvc.employee.mapper.EmployeeMapper;
 import com.tvc.employee.repository.EmployeeRepository;
-import com.tvc.employee.vo.EmployeeVO;
+import com.tvc.employee.vo.EmployeeVo;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 // @SpringBootTest
@@ -32,7 +33,7 @@ class EmployeeServiceTest {
   @Test
   void createEmployeeSuccess() {
 
-    EmployeeVO employeeVO = new EmployeeVO();
+    EmployeeVo employeeVO = new EmployeeVo();
     employeeVO.setId(101);
     employeeVO.setFirstname("James");
     employeeVO.setLastname("Kulla");
@@ -52,7 +53,7 @@ class EmployeeServiceTest {
   @Test
   void createEmployeeFailure() {
 
-    EmployeeVO employeeVO = new EmployeeVO();
+    EmployeeVo employeeVO = new EmployeeVo();
     employeeVO.setId(101);
     employeeVO.setFirstname("James");
     employeeVO.setLastname("Kulla");
@@ -77,7 +78,7 @@ class EmployeeServiceTest {
   @Test
   void getEmployeeFound() {
 
-    EmployeeVO employeeVO = new EmployeeVO();
+    EmployeeVo employeeVO = new EmployeeVo();
     employeeVO.setId(101);
     employeeVO.setFirstname("James");
     employeeVO.setLastname("Kulla");
@@ -109,7 +110,7 @@ class EmployeeServiceTest {
   @Test
   void updateEmployeeSuccess() {
 
-    EmployeeVO employeeVO = new EmployeeVO();
+    EmployeeVo employeeVO = new EmployeeVo();
     employeeVO.setId(1234);
     employeeVO.setFirstname("James");
     employeeVO.setLastname("Kulla");
@@ -123,7 +124,7 @@ class EmployeeServiceTest {
   @Test
   void updateEmployeeFailed() {
 
-    EmployeeVO employeeVO = new EmployeeVO();
+    EmployeeVo employeeVO = new EmployeeVo();
     employeeVO.setId(1234);
     employeeVO.setFirstname("James");
     employeeVO.setLastname("Kulla");
