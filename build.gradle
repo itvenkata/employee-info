@@ -236,7 +236,6 @@ dependencyCheck {
 /*check.dependsOn acceptanceTest
 acceptanceTest.mustRunAfter test*/
 
-
 /*
 task acceptanceTest(type: Test) {
     testClassesDirs = sourceSets.acceptanceTests.output.classesDirs
