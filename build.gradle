@@ -53,12 +53,12 @@ ext {
 }
 
 
-docker {
+/*docker {
     name "mycoolapp"
     dockerfile file('src/docker/Dockerfile')
     copySpec.from(jar).rename(".*","/app/employee-api.jar")
     buildArgs(['JAR_FILE': "/app/employee-api.jar"])
-}
+}*/
 
 
 dependencies {

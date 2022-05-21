@@ -29,21 +29,21 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /health
+              path: /api/employee/actuator/health
               port: 8090
             initialDelaySeconds: 15
             periodSeconds: 10
 
           livenessProbe:
             httpGet:
-              path: /health
+              path: /api/employee/actuator/health
               port: 8090
             initialDelaySeconds: 15
             periodSeconds: 10
 
           startupProbe:
             httpGet:
-              path: /health
+              path: /api/employee/actuator/health
               port: 8090
             failureThreshold: 30
             periodSeconds: 10

@@ -6,3 +6,8 @@ server:
 spring:
   application:
     name: "Employee Information"
+
+management:
+  endpoint:
+    health:
+      enabled: true
