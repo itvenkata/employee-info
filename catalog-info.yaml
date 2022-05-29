@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: employee-info
+  annotations:
+    github.com/project-slug: itvenkata/employee-info
+spec:
+  type: other
+  lifecycle: unknown
