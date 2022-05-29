@@ -8,4 +8,4 @@ spec:
   lifecycle: production
   owner: itvenkata
   definition:
-    $text: http://localhost:8090/api/employee/swagger-ui/index.html
+    $text: https://api.apis.guru/v2/specs/spotify.com/v1/swagger.yaml
