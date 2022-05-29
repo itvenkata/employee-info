@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: employee-info
+  description: Employee Info REST API
+spec:
+  type: openapi
+  lifecycle: production
+  owner: itvenkata
+  definition:
+    $text: http://localhost:8090/api/employee/swagger-ui/index.html
