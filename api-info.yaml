@@ -1,11 +1,11 @@
 apiVersion: backstage.io/v1alpha1
-kind: API
+kind: Component
 metadata:
-  name: employee-info
-  description: Employee Info REST API
+  name: sample-service-2
+  # Other metadata and annotations omitted for brevity.
 spec:
-  type: openapi
-  lifecycle: production
-  owner: itvenkata
-  definition:
-    $text: https://api.apis.guru/v2/specs/spotify.com/v1/swagger.yaml
+  type: service
+  owner: my-team
+  lifecycle: experimental
+  providesApis:
+    - spotify
