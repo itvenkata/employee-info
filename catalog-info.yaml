@@ -5,6 +5,6 @@ metadata:
   annotations:
     github.com/project-slug: itvenkata/employee-info
 spec:
-  type: other
-  lifecycle: unknown
+  type: service
+  lifecycle: experimental
   owner: itvenkata
