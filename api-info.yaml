@@ -1,11 +1,11 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: sample-service-2
+  name: employee-info
   # Other metadata and annotations omitted for brevity.
 spec:
   type: service
-  owner: my-team
+  owner: itvenkata
   lifecycle: experimental
   providesApis:
-    - spotify
+    - employee-info
